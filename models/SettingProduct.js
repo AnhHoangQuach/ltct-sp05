@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const SettingProductSchema = new mongoose.Schema({
   value: String,
+  priceIncrease: Number,
   categories: [
     {
       type: mongoose.Schema.ObjectId,
