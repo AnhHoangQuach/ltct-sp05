@@ -3,8 +3,14 @@ const SettingProductCategory = require('../models/SettingProductCategory')
 const { checkExistBetweenTwoArray } = require('../utils/helpers')
 
 module.exports.getAll = async (req, res, next) => {
+  const { categories } = req.query
+  let settings
   try {
-    const settings = await SettingProduct.find()
+    if (categories.length > 0) {
+      settings = await SettingProduct.find({ categories: { $in: categories } })
+    } else {
+      settings = await SettingProduct.find()
+    }
     return res.status(200).json({ status: 'success', data: settings })
   } catch (error) {
     return res.status(500).json({ status: 'error', message: error.message })
