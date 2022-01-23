@@ -6,7 +6,7 @@ module.exports.getAll = async (req, res, next) => {
   const { categories } = req.query
   let settings
   try {
-    if (categories.length > 0) {
+    if (categories != null && categories.length > 0) {
       settings = await SettingProduct.find({ categories: { $in: categories } })
     } else {
       settings = await SettingProduct.find()
