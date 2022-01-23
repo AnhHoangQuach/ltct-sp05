@@ -17,4 +17,6 @@ systemRouter.delete('/qa/:qaId', deleteQuestion)
 
 systemRouter.post('/email', settingMails)
 
+systemRouter.get('/export-excel', exportExcel)
+
 module.exports = systemRouter

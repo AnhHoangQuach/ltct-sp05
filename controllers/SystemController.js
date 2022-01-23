@@ -1,5 +1,7 @@
 const QA = require('../models/QA')
+const SettingProductCategory = require('../models/SettingProductCategory')
 const Shop = require('../models/Shop')
+const excelJS = require('exceljs')
 
 module.exports.createQuestion = async (req, res, next) => {
   try {
@@ -50,4 +52,34 @@ module.exports.settingMails = async (req, res, next) => {
   }
 }
 
-module.exports.exportExcel = async (req, res, next) => {}
+module.exports.exportExcel = async (req, res, next) => {
+  const workbook = new excelJS.Workbook() // Create a new workbook
+  const worksheet = workbook.addWorksheet('System Setting Product Categories') // New Worksheet
+  // Column for data in excel. key must match data key
+  worksheet.columns = [
+    { header: 'Name', key: 'name', width: 10 },
+    { header: 'CreatedAt', key: 'createdAt', width: 10 },
+    { header: 'UpdatedAt', key: 'updatedAt', width: 10 },
+  ]
+  // Looping through User data
+  const dataSettingCategory = await SettingProductCategory.find()
+  dataSettingCategory.forEach((category) => {
+    worksheet.addRow(category) // Add data in worksheet
+  })
+  // Making first line in excel bold
+  worksheet.getRow(1).eachCell((cell) => {
+    cell.font = { bold: true }
+  })
+  try {
+    var fileName = 'settings-product-categories-' + new Date().getTime() + '.xlsx'
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    res.setHeader('Content-Disposition', 'attachment; filename=' + fileName)
+
+    await workbook.xlsx.write(res)
+  } catch (err) {
+    return res.status(500).json({ status: 'error', message: err.message })
+  }
+}
