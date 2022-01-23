@@ -15,4 +15,6 @@ systemRouter.patch('/qa/:qaId', updateQuestion)
 
 systemRouter.delete('/qa/:qaId', deleteQuestion)
 
+systemRouter.post('/email', settingMails)
+
 module.exports = systemRouter
